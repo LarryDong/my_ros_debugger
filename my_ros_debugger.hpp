@@ -17,6 +17,9 @@
 #include <string>
 #include <unordered_map>
 
+#include <chrono>
+#include <iomanip>
+
 // #define DEBUG_INFO
 
 
@@ -61,6 +64,47 @@ inline std::string color_cout(const std::string& input, const std::string& color
     std::cout << coloredInput << std::endl;
 
 }
+
+
+// timer
+class MyTimer {
+private:
+    std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
+    bool timer_started = false;
+    double elapsed_time = 0.0;
+
+public:
+    // Start the timer
+    void tic() {
+        start_time = std::chrono::high_resolution_clock::now();
+        timer_started = true;
+    }
+
+    // Stop the timer and return elapsed time in seconds
+    double toc() {
+        if (!timer_started) {
+            std::cerr << "Timer not started! Call tic() first.\n";
+            return 0.0;
+        }
+        
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end_time - start_time;
+        elapsed_time = duration.count();
+        timer_started = false;
+        return elapsed_time;
+    }
+
+    // Print the elapsed time with "xxx.xx" format
+    void print(const std::string info) const {
+        std::cout << std::fixed << std::setprecision(2);
+        std::cout << info << ": " << elapsed_time << " s" << std::endl;
+    }
+
+    // Get the elapsed time without printing
+    double getElapsed() const {
+        return elapsed_time;
+    }
+};
 
 
 }
